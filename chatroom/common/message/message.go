@@ -23,6 +23,7 @@ type LoginMsg struct{
 // LoginResMsg用来表示返回消息发送情况
 type LoginResMsg struct{
 	Code int `json:"code"` // 状态码200表示成功，500表示未注册
+	UsersId []int `json:"users"` // 保存用户Id的slice
 	Error string `json:"error"` // 错误信息
 }
 

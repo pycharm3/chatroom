@@ -12,6 +12,7 @@ import (
 
 type Userprocess struct{
 	Conn net.Conn
+	UserId int
 }
 
 // 编写一个serverProcessLogin处理登录请求
@@ -49,16 +50,19 @@ func (this *Userprocess)ServerProcessLogin(msg *message.Message)(err error){
 		}
 	}else{
 		loginResMsg.Code = 200
+		// UserMgr实例化出一个userMgr用这个userMgr使用绑定UserMgr的AddOnlineUsers方法
+		// 传入的this就是绑定Userprocess的this
+		// 将登录成功的用户Id赋给Userprocess.UserdId
+		this.UserId = loginMsg.UserId
+		userMgr.AddOnlineUsers(this)
+		// 把当前登录成功的UserId放入loginResMsg.UsersId
+		// 遍历userMgr.onlineUsers
+		for id,_ := range userMgr.onlineUsers{
+			loginResMsg.UsersId = append(loginResMsg.UsersId,id)
+		}
+		
 		fmt.Println(user,"登录成功")
 	}
-
-
-	// if loginMsg.UserId == 100 && loginMsg.UserPwd == "123456"{
-	// 	loginResMsg.Code = 200
-	// }else{
-	// 	loginResMsg.Code = 500
-	// 	fmt.Println("user notfund fpx.no1")
-	// }
 
 	data,err := json.Marshal(loginResMsg)
 	if err != nil{

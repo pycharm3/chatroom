@@ -77,7 +77,13 @@ func (this *Lucky)Login(userid int,userpwd string)(err error){
 	err = json.Unmarshal([]byte(msg.Data),&loginResmsg)
 
 	if loginResmsg.Code == 200{
-		fmt.Println("登录成功...")
+		for _,v := range loginResmsg.UsersId{
+			// 如果v等于自己登录的Id则使用continue退出当前循环
+			if v == userid{
+				continue
+			}
+			fmt.Println("登录成功...当前在线用户Id为：",v)
+		}
 		/* 登录成功调用Stayconnected()和服务器保持连接，有信息传入
 		client则Showmenu()能看到 */
 		// 这里开一个goroutine去单独执行
