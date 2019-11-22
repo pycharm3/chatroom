@@ -23,3 +23,12 @@
 * 登录成功查看当前在线用户列表
 * 关键点：
 * 在client维护一个map，在message新建一个struct存放用户id和状态，在LoginResMsg里新增一个字段Users用来存放登录用户id，用户登录成功后反序列化并遍历该字* 段，将登录成功用户Id存入map中，遍历这个map得到登录成功的用户id
+
+---
+* // 2019-11-22 15:21
+* // user:xy
+* // 第四次提交
+* 实现功能：
+* 客户端发送群发消息给服务端（仅发送未作处理
+* 关键点：
+* 新增CurUser结构体存放Conn连接和message.User字段，message里新增SmsMsg结构体，作为发送消息结构体，存放content消息体和User实例，编写SendGroupMsg方法，参数为content，调用该方法传入要发送的消息，序列化处理，调用utils里的WritePkg发送序列化后的方法，完成消息发送到服务器
