@@ -14,7 +14,7 @@ func Showmenu(){
 	for{
 		fmt.Println("-----恭喜xxx登录成功-----")
 		fmt.Println("-----1 查看在线用户列表-----")
-		fmt.Println("-----2 发送消息-----")
+		fmt.Println("-----2 群发消息-----")
 		fmt.Println("-----3 信息列表-----")
 		fmt.Println("-----4 退出系统-----")
 		fmt.Println("请选择1-4")
@@ -63,6 +63,8 @@ func Stayconnected(conn net.Conn){
 				var notifyUserStatusMsg message.NotifyUserStatusMsg
 				json.Unmarshal([]byte(msg.Data),&notifyUserStatusMsg)
 				updataUserStatus(&notifyUserStatusMsg)
+			case message.SmsMsgType:
+				outputGroupMsg(&msg)
 			default:
 				fmt.Println("接收到了一个未知类型消息")
 		}

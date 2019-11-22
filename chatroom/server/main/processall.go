@@ -28,6 +28,9 @@ func (this *Processall)serverProcessMsg(msg *message.Message)(err error){
 				Conn : this.Conn,
 			}
 			err = up2.ServerProcessRegister(msg)
+		case message.SmsMsgType:
+			smsProcess := &process2.SmsProcess{}
+			smsProcess.SendGroupMsg(msg)
 		default :
 			fmt.Println("消息类型不存在")
 	}
