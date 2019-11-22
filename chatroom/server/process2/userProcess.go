@@ -15,6 +15,50 @@ type Userprocess struct{
 	UserId int
 }
 
+// 编写通知其他用户上线消息
+func (this *Userprocess)NotifyOthersOnlineUser(userId int){
+	// 遍历onlienUsers然后一个一个发送
+	for id,up := range userMgr.onlineUsers{
+		// 如果id等于自己id退出当前循环
+		if id == userId{
+			continue
+		}
+		// onlineUsers的value为*Userprocess 类型所以up可以调用Noti...
+		err := up.NotifyMeOnline(userId)
+		if err != nil{
+			fmt.Println("up.NotifyMeonline(userId) err",err)
+		}
+	}
+}
+
+func (this *Userprocess)NotifyMeOnline(userId int)(err error){
+	// 组装NotifyUserStatusMsg
+	var msg message.Message
+	msg.Type = message.NotifyUserStatusMsgType
+
+	var notifyUserStatusMsg message.NotifyUserStatusMsg
+	notifyUserStatusMsg.UserId = userId
+	notifyUserStatusMsg.Status = message.UserOnlien
+
+	data,err := json.Marshal(notifyUserStatusMsg)
+	if err != nil{
+		fmt.Println("json.Marshal(notifyUserStatusMsg) err",err)
+		return
+	}
+	// data序列化后是一个byte slice需要转为string赋给msg.Data
+	msg.Data = string(data)
+	data,err = json.Marshal(msg)
+	tf := &utils.Transfer{
+		Conn:this.Conn,
+	}
+	err = tf.WritePkg(data)
+	if err != nil{
+		fmt.Println("tf.WritePkg(data) err",err)
+		return
+	}
+	return
+}
+
 // 编写一个serverProcessLogin处理登录请求
 func (this *Userprocess)ServerProcessLogin(msg *message.Message)(err error){
 	// 核心代码 先从msg中取出msg.Data并直接反序列化为loginMsg
@@ -55,12 +99,13 @@ func (this *Userprocess)ServerProcessLogin(msg *message.Message)(err error){
 		// 将登录成功的用户Id赋给Userprocess.UserdId
 		this.UserId = loginMsg.UserId
 		userMgr.AddOnlineUsers(this)
+		// 通知其他用户，我上线了
+		this.NotifyOthersOnlineUser(loginMsg.UserId)
 		// 把当前登录成功的UserId放入loginResMsg.UsersId
 		// 遍历userMgr.onlineUsers
 		for id,_ := range userMgr.onlineUsers{
 			loginResMsg.UsersId = append(loginResMsg.UsersId,id)
 		}
-		
 		fmt.Println(user,"登录成功")
 	}
 
@@ -76,12 +121,10 @@ func (this *Userprocess)ServerProcessLogin(msg *message.Message)(err error){
 		fmt.Println("serverProcessLogin json.Marshal(resMsg) err:",err)
 		return
 	}
-
 	// 消息序列化完毕准备发送
 	tf := &utils.Transfer{
 		Conn : this.Conn, // 调用本方法(this *Userprocess) this绑定struct里的Conn
 	}
-
 	err = tf.WritePkg(data)
 	return
 }

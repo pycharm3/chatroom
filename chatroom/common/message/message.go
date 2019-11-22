@@ -6,6 +6,14 @@ const(
 	LoginResMsgType = "LoginResMsg" // 返回登录
 	RegisterMsgType = " RegisterMsg" // 注册
 	RegisterResMsgType = " RegisterResMsg" // 返回注册
+	NotifyUserStatusMsgType = "NotifyUserStatusMsg" // 推送用户在线信息
+)
+
+// 定义几个用户状态的常量
+const(
+	UserOnlien = iota
+	UserOffline
+	UserBusyStatus
 )
 
 // Message和LoginMsg用户存放消息及给消息打tag
@@ -34,4 +42,9 @@ type RegisterMsg struct{
 type RegisterResMsg struct{
 	Code int `json:"code"` // 状态码200表示成功，500表示已被注册
 	Error string `json:"error"` // 错误信息
+}
+
+type NotifyUserStatusMsg struct{
+	UserId int `json:"userId"` // 用户id
+	Status int `json:"status"` // 用户状态
 }

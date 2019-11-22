@@ -5,6 +5,8 @@ import (
 	"os"
 	"net"
 	"gotcp/chatroom/client/utils"
+	"gotcp/chatroom/common/message"
+	"encoding/json"
 )
 // 发送消息 信息列表 退出系统
 func Showmenu(){
@@ -22,6 +24,7 @@ func Showmenu(){
 		switch key{
 			case 1:
 				fmt.Println("查看在线用户列表")
+				outputOnlineUsers()
 			case 2:
 				fmt.Println("发送消息")
 			case 3:
@@ -47,7 +50,15 @@ func Stayconnected(conn net.Conn){
 		if err != nil{
 			fmt.Println("tf.ReadMsg err = ",err)
 		}
-		fmt.Println("msg = ",msg)
+		switch msg.Type {
+			case message.NotifyUserStatusMsgType:
+				// 处理消息
+				var notifyUserStatusMsg message.NotifyUserStatusMsg
+				json.Unmarshal([]byte(msg.Data),&notifyUserStatusMsg)
+				updataUserStatus(&notifyUserStatusMsg)
+			default:
+				fmt.Println("接收到了一个未知类型消息")
+		}
 	} 
 }
 
