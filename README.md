@@ -32,3 +32,12 @@
 * 客户端发送群发消息给服务端（仅发送未作处理
 * 关键点：
 * 新增CurUser结构体存放Conn连接和message.User字段，message里新增SmsMsg结构体，作为发送消息结构体，存放content消息体和User实例，编写SendGroupMsg方法，参数为content，调用该方法传入要发送的消息，序列化处理，调用utils里的WritePkg发送序列化后的方法，完成消息发送到服务器
+
+---
+* // 2019-11-22 18：36
+* // user:xy
+* // 第五次提交
+* 实现功能：
+* 登录成功的用户能够群发消息给所有在线用户（自己除外）
+* 关键点：
+* client端发送消息给server已经完成，server接收到群发消息，在server/process2/smsProcess.go新增处理群发消息方法，client收到消息后反序列化并将消息打印出来，完成群发消息
