@@ -3,10 +3,12 @@ package processall
 import (
 	"fmt"
 	"gotcp/chatroom/common/message"
+	"gotcp/chatroom/client/model"
 )
 
 // 定义一个客户端要维护的map
 var onlineUsers map[int]*message.User = make(map[int]*message.User,10)
+var CurUser model.CurUser // 登录成功后对CurUser进行初始化
 
 // 在客户端显示当前在线的用户
 func outputOnlineUsers(){

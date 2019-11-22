@@ -77,6 +77,11 @@ func (this *Lucky)Login(userid int,userpwd string)(err error){
 	err = json.Unmarshal([]byte(msg.Data),&loginResmsg)
 
 	if loginResmsg.Code == 200{
+		// 对CurUser进行初始化
+		CurUser.Conn = conn
+		CurUser.UserId = userid
+		CurUser.UserStatus = message.UserOnlien
+		
 		fmt.Println("登录成功用户Id为：",userid)
 		for _,v := range loginResmsg.UsersId{
 			// 完成onlineUser的初始化

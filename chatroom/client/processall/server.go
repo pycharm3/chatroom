@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 )
 // 发送消息 信息列表 退出系统
+
 func Showmenu(){
 	for{
 		fmt.Println("-----恭喜xxx登录成功-----")
@@ -17,7 +18,10 @@ func Showmenu(){
 		fmt.Println("-----3 信息列表-----")
 		fmt.Println("-----4 退出系统-----")
 		fmt.Println("请选择1-4")
-	
+		
+		var content string
+		smsProcess := &SmsProcess{}
+
 		key := 1
 		fmt.Scanf("%d\n",&key)
 	
@@ -26,7 +30,10 @@ func Showmenu(){
 				fmt.Println("查看在线用户列表")
 				outputOnlineUsers()
 			case 2:
-				fmt.Println("发送消息")
+				fmt.Println("输入你想对大家说的话: ")
+				fmt.Scanf("%s\n",&content)
+				smsProcess.SendGroupMsg(content)
+
 			case 3:
 				fmt.Println("信息列表")
 			case 4:
