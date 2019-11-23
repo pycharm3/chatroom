@@ -10,16 +10,17 @@ import (
 )
 // 发送消息 信息列表 退出系统
 
-func Showmenu(){
+func Showmenu(userid int){
 	for{
-		fmt.Println("-----恭喜xxx登录成功-----")
+		fmt.Printf("-----当前在线用户Id:%v-----",userid)
 		fmt.Println("-----1 查看在线用户列表-----")
 		fmt.Println("-----2 群发消息-----")
-		fmt.Println("-----3 信息列表-----")
+		fmt.Println("-----3 私聊对方-----")
 		fmt.Println("-----4 退出系统-----")
 		fmt.Println("请选择1-4")
 		
 		var content string
+		var privateuserid int
 		smsProcess := &SmsProcess{}
 
 		key := 1
@@ -35,7 +36,15 @@ func Showmenu(){
 				smsProcess.SendGroupMsg(content)
 
 			case 3:
-				fmt.Println("信息列表")
+				fmt.Println("私聊对方")
+				fmt.Println("输入私聊对象Id")
+				// fmt.Scanf("%s\n",&privateuserid)
+				fmt.Scanln(&privateuserid)
+		
+				fmt.Println("输入你想说的话: ")
+				// fmt.Scanf("%s\n",&content)
+				fmt.Scanln(&content)
+				smsProcess.SendPrivateMsg(content,privateuserid)
 			case 4:
 				fmt.Println("退出系统")
 				os.Exit(0)
@@ -65,6 +74,8 @@ func Stayconnected(conn net.Conn){
 				updataUserStatus(&notifyUserStatusMsg)
 			case message.SmsMsgType:
 				outputGroupMsg(&msg)
+			case message.PrivateMsgType:
+				privateMsg(&msg)
 			default:
 				fmt.Println("接收到了一个未知类型消息")
 		}

@@ -8,6 +8,7 @@ const(
 	RegisterResMsgType = " RegisterResMsg" // 返回注册
 	NotifyUserStatusMsgType = "NotifyUserStatusMsg" // 推送用户在线信息
 	SmsMsgType = "SmsMsg" // client群发消息类型
+	PrivateMsgType = "PrivateMsg" // 私聊消息
 )
 
 // 定义几个用户状态的常量
@@ -54,4 +55,10 @@ type NotifyUserStatusMsg struct{
 type SmsMsg struct{
 	Content string `json:"content"` // 消息内容
 	User // 匿名结构体来自于user.User
+}
+
+type PrivateMsg struct{
+	Content string `json:"content"` // 
+	MyUserId int `json:"myUserId"`
+	User
 }

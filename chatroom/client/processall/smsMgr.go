@@ -17,3 +17,15 @@ func outputGroupMsg(msg *message.Message){
 	fmt.Println(info)
 	fmt.Println()
 }
+
+func privateMsg(msg *message.Message){
+	var privateMsg message.PrivateMsg
+	err := json.Unmarshal([]byte(msg.Data),&privateMsg)
+	if err != nil{
+		fmt.Println("json.Unmarshal([]byte(msg.Data),&privateMsg) err=",err)
+		return
+	}
+	info := fmt.Sprintf("用户Id:\t%v 想对你说:\t%v",privateMsg.UserId,privateMsg.Content)
+	fmt.Println(info)
+	fmt.Println()
+}

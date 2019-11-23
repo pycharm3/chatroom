@@ -96,7 +96,7 @@ func (this *Lucky)Login(userid int,userpwd string)(err error){
 		// 这里开一个goroutine去单独执行
 		go Stayconnected(conn)
 		// 循环显示菜单
-		Showmenu()
+		Showmenu(userid)
 	}else{
 		fmt.Println(loginResmsg.Error)
 	}

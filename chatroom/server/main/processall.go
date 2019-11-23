@@ -15,7 +15,6 @@ type Processall struct{
 
 // 编写一个ServerProcessMsg函数判断消息请求类型进行相应处理
 func (this *Processall)serverProcessMsg(msg *message.Message)(err error){
-	fmt.Println("看看能否接收到群发消息: ",msg)
 	switch msg.Type{
 		case message.LoginMsgType:
 			up := &process2.Userprocess{
@@ -31,6 +30,9 @@ func (this *Processall)serverProcessMsg(msg *message.Message)(err error){
 		case message.SmsMsgType:
 			smsProcess := &process2.SmsProcess{}
 			smsProcess.SendGroupMsg(msg)
+		case message.PrivateMsgType:
+			smsProcess := &process2.SmsProcess{}
+			smsProcess.SendPrivateMsg(msg)
 		default :
 			fmt.Println("消息类型不存在")
 	}
